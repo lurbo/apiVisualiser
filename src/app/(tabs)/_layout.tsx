@@ -13,7 +13,7 @@ export default function TabLayout() {
         tabBarStyle: {backgroundColor: '#4F759B'},
         headerStyle: {backgroundColor: '#4F759B'},
         headerTitleStyle: {color: 'white', fontSize: 30},
-        href: null,
+        tabBarButton: () => null,
         tabBarLabelStyle: {color: 'white', fontSize: 15}}} />
 
         <Tabs.Screen name="about" options={{ title: 'O aplikaciji',

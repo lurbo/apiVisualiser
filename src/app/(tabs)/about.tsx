@@ -14,15 +14,9 @@ export default function HomeScreen() {
           Trenutna verzija:{"\n"}
           </Text>
         <Text style={styles.opis}>
-          v0.1 - Neizpravna{"\n"}{"\n"}{"\n"}
+          v1.0 - First light{"\n"}{"\n"}{"\n"}
         </Text>
 
-        <Text style={styles.naslov}>
-          Avtor:{"\n"}
-          </Text>
-        <Text style={styles.opis}>
-          Filip O.
-        </Text>
       </View>
     </View>
   );

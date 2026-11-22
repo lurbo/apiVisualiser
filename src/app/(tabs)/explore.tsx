@@ -1,10 +1,13 @@
 import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 
-export default function HomeScreen() {
+export default function explore() {
+
+  const { kraj } = useLocalSearchParams();
   return (
     <View style={styles.container}>
       <Text style={styles.naslov}>
-      hey 2
+      {kraj}
       </Text>
     </View>
   );

@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text, ScrollView, Pressable, TextInput } from 'react-native';
 import { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Link} from 'expo-router';
 
 
 //definicija podatkov
@@ -15,36 +16,47 @@ interface vremenskiPodatki{
 export default function HomeScreen() {
   const [weather, setWeather] = useState<vremenskiPodatki>();
   const [loading, setLoading] = useState(true);
+  const [ime, setIme] = useState(''); //po prejšnji vaji
 
   useEffect(() => {
     const pridobiVreme = async () => {
+      if (ime == null || ime === '') {
+        return;
+      }
+
+
+      try {
+      const naslov = 'https://' + 'geocoding-api.' + 'open-meteo.com' + '/v1/search?name=' + ime + '&count=1';
+
+      const odgovor = await fetch(naslov);
+      const podatek = await odgovor.json();
+
+      const lat = podatek.results[0].latitude;
+      const long = podatek.results[0].longitude;
       
-      const url = "https://api.open-meteo.com/v1/forecast?latitude=46.3572&longitude=15.1128&current=temperature_2m,weather_code,wind_speed_10m"
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,weather_code,wind_speed_10m`;
       const response = await fetch(url);
       const data = await response.json();
       setWeather(data.current);
-
+      }
+      catch(error){
+    }
       
+      finally{
       setLoading(false);
-        
+      }
     };
     pridobiVreme();
   
-  }, []);
-    const naslov = 'https://' + 'geocoding-api.' + 'open-meteo.com' + '/v1/search?name=' + ime + '&count=1';
-
-    const odgovor = await fetch(naslov);
-    const podatek = await odgovor.json();
-
-    const lat = podatek.results[0].latitude;
-    const long = podatek.results[0].longitude;
+  }, [ime]);
+   
 
 
 
 
 
 
-  const [ime, setIme] = useState(''); //po prejšnji vaji
+  
   const shraniDogodek = async () => {
   const podatki = await AsyncStorage.getItem('dogodki');
 
@@ -82,10 +94,17 @@ export default function HomeScreen() {
 
 
           <Text style={styles.naslov}>
-          Trenutni vremenski podatki za Velenje: {"\n"}
+          Trenutni vremenski podatki za {ime}: {"\n"}
           </Text>
           <Text style={styles.opis}>Stopinje: {weather?.temperature_2m} °C{"\n"}{"\n"}{"\n"}</Text>
           <Text style={styles.opis}>Hitrost vetra: {weather?.wind_speed_10m} km/h </Text>
+          <Link href={{
+            pathname: '/explore',
+            params: { kraj: ime}
+          }}
+            style={styles.more}>
+              <Text>Več</Text>
+            </Link>
       </View>
     </View>
   );
@@ -98,7 +117,13 @@ const styles = StyleSheet.create({
   naslov: {
     fontSize: 25,
     color: 'white',
-    fontWeight: 800,
+    fontWeight: '800',
+  },
+
+  more: {
+    borderStyle: 'solid',
+    borderColor: 'yellow',
+    borderWidth: 10,
   },
 
   opis: {
