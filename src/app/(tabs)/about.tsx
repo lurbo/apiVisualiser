@@ -14,7 +14,7 @@ export default function HomeScreen() {
           Trenutna verzija:{"\n"}
           </Text>
         <Text style={styles.opis}>
-          v2.0 - 2nd Light{"\n"}{"\n"}{"\n"}
+          v3.0 - Third Time's The Charm{"\n"}{"\n"}{"\n"}
         </Text>
 
       </View>
