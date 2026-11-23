@@ -5,7 +5,6 @@ import {Link} from 'expo-router';
 interface vremenskiPodatki{ 
   temperature_2m: number;
   wind_speed_10m: number;
-  weather_code: number;
 }
 
 export default function HomeScreen() {
@@ -36,7 +35,7 @@ export default function HomeScreen() {
       const lat = podatek.results[0].latitude;
       const long = podatek.results[0].longitude;
       
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,weather_code,wind_speed_10m`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,wind_speed_10m`;
       const response = await fetch(url);
       const data = await response.json();
       setWeather(data.current);
