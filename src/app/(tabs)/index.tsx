@@ -3,15 +3,11 @@ import { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Link} from 'expo-router';
 
-
-//definicija podatkov
 interface vremenskiPodatki{ 
   temperature_2m: number;
   wind_speed_10m: number;
   weather_code: number;
 }
-
-
 
 export default function HomeScreen() {
   const [weather, setWeather] = useState<vremenskiPodatki>();
@@ -23,7 +19,6 @@ export default function HomeScreen() {
       if (ime == null || ime === '') {
         return;
       }
-
 
       try {
       const naslov = 'https://' + 'geocoding-api.' + 'open-meteo.com' + '/v1/search?name=' + ime + '&count=1';
@@ -39,6 +34,7 @@ export default function HomeScreen() {
       const data = await response.json();
       setWeather(data.current);
       }
+
       catch(error){
     }
       
@@ -84,8 +80,6 @@ export default function HomeScreen() {
               style={styles.vnosKraja} 
               />
 
-
-
           <Text style={styles.naslov}>
           {"\n"}Trenutni vremenski podatki za {ime}: {"\n"}
           </Text>
@@ -103,10 +97,7 @@ export default function HomeScreen() {
   );
 }
 
-
-
 const styles = StyleSheet.create({
-  
   naslov: {
     fontSize: 25,
     color: 'white',
