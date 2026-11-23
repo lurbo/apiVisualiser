@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text, ScrollView, Pressable, TextInput, ActivityIndicator, RefreshControl } from 'react-native';
 import { useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Link} from 'expo-router';
 
 interface vremenskiPodatki{ 
@@ -21,7 +20,6 @@ export default function HomeScreen() {
         return;
       }
 
-  useEffect(() => {
       setLoading(true);
       setError(false);
 
@@ -30,6 +28,10 @@ export default function HomeScreen() {
 
       const odgovor = await fetch(naslov);
       const podatek = await odgovor.json();
+      
+      if (!podatek.results || podatek.results.length === 0) {
+        throw new Error('Kraj ni bil najden');
+      }
 
       const lat = podatek.results[0].latitude;
       const long = podatek.results[0].longitude;
@@ -49,29 +51,11 @@ export default function HomeScreen() {
       setRefreshing(false);
       }
     };
+
+    useEffect(() => {
     pridobiVreme();
   
   }, [ime]);
-  
-  const shraniDogodek = async () => {
-  const podatki = await AsyncStorage.getItem('dogodki');
-
-  let dogodki;
-  if (podatki){
-    dogodki = JSON.parse(podatki);
-  }
-  else {
-    dogodki = [];
-  }
-
-  dogodki.push({ //izvozi
-    ime: ime,
-  });
-
-  await AsyncStorage.setItem('dogodki', JSON.stringify(dogodki)); //iz tabele v text
-
-  setIme(''); //vrne v prvotno vrednost oz izbrise iz vnosnega polja
-  };
   
   const osvezi = () => {
     setRefreshing(true);
@@ -79,6 +63,15 @@ export default function HomeScreen() {
   }
   return (
     <View style={styles.ozadje}>
+        <ScrollView
+          contentContainerStyle={{ alignItems: 'center' }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={osvezi}
+            />
+          }
+        >
       <View style={styles.container90}>
           <Text style={styles.naslov}>
             Vnesi ime kraja:{"\n"} {"\n"}
@@ -90,10 +83,14 @@ export default function HomeScreen() {
               onChangeText={setIme}
               style={styles.vnosKraja} 
               />
-      {loading ? (
-        <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 20 }} />
-      ) : (
-        <>
+        {error ? (
+          <Text style={styles.naslov}>
+            Napaka!
+          </Text>
+        ) : loading ? (
+          <ActivityIndicator size="large" color="#ffffff"/>
+        ) : (
+          <>
           <Text style={styles.naslov}>
             {"\n"}Trenutni vremenski podatki za {ime}: {"\n"}
           </Text>
@@ -109,6 +106,7 @@ export default function HomeScreen() {
         </>
       )}
       </View>
+      </ScrollView>
     </View>
   );
 }

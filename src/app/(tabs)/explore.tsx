@@ -1,19 +1,46 @@
-import { StyleSheet, View, Text, Linking, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, View, Text, Linking, Pressable, FlatList, Image} from 'react-native';
 import { useLocalSearchParams, Link} from 'expo-router';
 
 export default function explore() {
 
   const { kraj } = useLocalSearchParams();
   const url = `https://sl.wikipedia.org/wiki/${kraj}`
+  const urlDva = `https://en.wikivoyage.org/wiki/${kraj}`
+  const povezave = [
+    { id: '1', ime: 'Wikipedija',slika: require('../../../assets/images/wikipedia.png')},
+    { id: '2', ime: 'Wikivoyage', slika: require('../../../assets/images/wikivoyage.png')}, 
+  ]
   return (
     <View style={styles.container}>
       <View style={styles.container90}>
       <Text style={styles.naslov}>
       {kraj}{"\n"}{"\n"}
       </Text>
-      <Pressable onPress={() => Linking.openURL(url)}>
-          <Text style={styles.wiki}>Wikipedija{"\n"}{"\n"}</Text>
-        </Pressable>
+      <FlatList
+        data={povezave}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Pressable
+            style={styles.povezava}
+                onPress={() => {
+                  if (item.id === '1') {
+                    Linking.openURL(url);
+                  }
+                  else {
+                    Linking.openURL(urlDva);
+                  }
+                }}
+            >
+              <Image
+                source={item.slika}
+                style={styles.slika}
+              />
+              <Text style={styles.wiki}>
+                {item.ime}
+              </Text>
+            </Pressable>
+           )}
+        />
 
         <Link href={{
             pathname: '/',
@@ -40,6 +67,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     
   },
+
+    povezava: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: '100%',
+    padding: 10,
+    marginBottom: 15,
+  },
+
+  slika: {
+    width: 60,
+    height: 60,
+    marginRight: 15,
+    resizeMode: 'contain',
+  },
+
 
   container: {
     backgroundColor: '#97ABB1',
