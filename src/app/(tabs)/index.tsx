@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, Pressable, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Link} from 'expo-router';
@@ -11,7 +11,7 @@ interface vremenskiPodatki{
 
 export default function HomeScreen() {
   const [weather, setWeather] = useState<vremenskiPodatki>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [ime, setIme] = useState(''); //po prejšnji vaji
 
   useEffect(() => {
@@ -19,6 +19,8 @@ export default function HomeScreen() {
       if (ime == null || ime === '') {
         return;
       }
+
+      setLoading(true);
 
       try {
       const naslov = 'https://' + 'geocoding-api.' + 'open-meteo.com' + '/v1/search?name=' + ime + '&count=1';
@@ -79,19 +81,24 @@ export default function HomeScreen() {
               onChangeText={setIme}
               style={styles.vnosKraja} 
               />
-
+      {loading ? (
+        <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 20 }} />
+      ) : (
+        <>
           <Text style={styles.naslov}>
-          {"\n"}Trenutni vremenski podatki za {ime}: {"\n"}
+            {"\n"}Trenutni vremenski podatki za {ime}: {"\n"}
           </Text>
           <Text style={styles.opis}>{"\n"}Stopinje: {weather?.temperature_2m} °C{"\n"}{"\n"}</Text>
           <Text style={styles.opis}>Hitrost vetra: {weather?.wind_speed_10m} km/h{"\n"} </Text>
           <Link href={{
             pathname: '/explore',
-            params: { kraj: ime}
+            params: { kraj: ime }
           }}
             style={styles.more}>
-              <Text>Več</Text>
-            </Link>
+            <Text>Več</Text>
+          </Link>
+        </>
+      )}
       </View>
     </View>
   );
