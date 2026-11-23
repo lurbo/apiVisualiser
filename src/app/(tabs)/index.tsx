@@ -49,13 +49,6 @@ export default function HomeScreen() {
     pridobiVreme();
   
   }, [ime]);
-   
-
-
-
-
-
-
   
   const shraniDogodek = async () => {
   const podatki = await AsyncStorage.getItem('dogodki');
@@ -81,7 +74,7 @@ export default function HomeScreen() {
     <View style={styles.ozadje}>
       <View style={styles.container90}>
           <Text style={styles.naslov}>
-            Vnesi ime kraja:{"\n"} 
+            Vnesi ime kraja:{"\n"} {"\n"}
             </Text> 
 
             <TextInput
@@ -94,10 +87,10 @@ export default function HomeScreen() {
 
 
           <Text style={styles.naslov}>
-          Trenutni vremenski podatki za {ime}: {"\n"}
+          {"\n"}Trenutni vremenski podatki za {ime}: {"\n"}
           </Text>
-          <Text style={styles.opis}>Stopinje: {weather?.temperature_2m} °C{"\n"}{"\n"}{"\n"}</Text>
-          <Text style={styles.opis}>Hitrost vetra: {weather?.wind_speed_10m} km/h </Text>
+          <Text style={styles.opis}>{"\n"}Stopinje: {weather?.temperature_2m} °C{"\n"}{"\n"}</Text>
+          <Text style={styles.opis}>Hitrost vetra: {weather?.wind_speed_10m} km/h{"\n"} </Text>
           <Link href={{
             pathname: '/explore',
             params: { kraj: ime}
@@ -122,8 +115,12 @@ const styles = StyleSheet.create({
 
   more: {
     borderStyle: 'solid',
-    borderColor: 'yellow',
-    borderWidth: 10,
+    borderColor: 'white',
+    borderWidth: 3,
+    borderRadius: 5,
+    width: 50,
+    textAlign: 'center',
+    fontSize: 20,
   },
 
   opis: {
