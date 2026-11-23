@@ -15,4 +15,3 @@ Pridobi trenutne podatke:
 
 V podoknu explore možnost vrnitve in izbire različnih zunanjih povezav.
 Linki so prikazani v flatlistu, s sliko shranjeno v programu.
------------------------------
