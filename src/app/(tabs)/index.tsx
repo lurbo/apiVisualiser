@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, Pressable, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Pressable, TextInput, ActivityIndicator, RefreshControl } from 'react-native';
 import { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Link} from 'expo-router';
@@ -13,14 +13,17 @@ export default function HomeScreen() {
   const [weather, setWeather] = useState<vremenskiPodatki>();
   const [loading, setLoading] = useState(false);
   const [ime, setIme] = useState(''); //po prejšnji vaji
+  const [error, setError] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const pridobiVreme = async () => {
+  const pridobiVreme = async () => {
       if (ime == null || ime === '') {
         return;
       }
 
+  useEffect(() => {
       setLoading(true);
+      setError(false);
 
       try {
       const naslov = 'https://' + 'geocoding-api.' + 'open-meteo.com' + '/v1/search?name=' + ime + '&count=1';
@@ -38,10 +41,12 @@ export default function HomeScreen() {
       }
 
       catch(error){
+        setError(true);
     }
       
       finally{
       setLoading(false);
+      setRefreshing(false);
       }
     };
     pridobiVreme();
@@ -68,6 +73,10 @@ export default function HomeScreen() {
   setIme(''); //vrne v prvotno vrednost oz izbrise iz vnosnega polja
   };
   
+  const osvezi = () => {
+    setRefreshing(true);
+    pridobiVreme();
+  }
   return (
     <View style={styles.ozadje}>
       <View style={styles.container90}>
